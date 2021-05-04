@@ -54,6 +54,7 @@ class Customer {
   }
 
   static async search(names) {
+    if (names.length < 2 || names.length > 2) throw new Error('Please enter a first and last name');
     let firstName = names[0];
     firstName = firstName.replace(firstName[0], firstName[0].toUpperCase());
     let lastName = names[1];
@@ -61,6 +62,11 @@ class Customer {
 
     const result = await db.query(`SELECT id FROM customers WHERE last_name=$1 AND first_name=$2`, [lastName, firstName]);
 
+    if (result.rows[0] === undefined) {
+      const err = new Error('No such customer');
+      err.status = 404;
+      throw err;
+    }
     return await Customer.get(result.rows[0].id);
   }
 
