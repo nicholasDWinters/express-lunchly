@@ -53,6 +53,13 @@ class Customer {
     return new Customer(customer);
   }
 
+  // get customer full name
+  static async fullName(id) {
+
+    const customer = await Customer.get(id);
+    return `${customer.firstName} ${customer.lastName}`
+  }
+
   /** get all reservations for this customer. */
 
   async getReservations() {
@@ -78,6 +85,11 @@ class Customer {
       );
     }
   }
+
+  fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
 }
 
 module.exports = Customer;
