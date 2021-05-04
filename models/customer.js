@@ -53,11 +53,15 @@ class Customer {
     return new Customer(customer);
   }
 
-  // get customer full name
-  static async fullName(id) {
+  static async search(names) {
+    let firstName = names[0];
+    firstName = firstName.replace(firstName[0], firstName[0].toUpperCase());
+    let lastName = names[1];
+    lastName = lastName.replace(lastName[0], lastName[0].toUpperCase());
 
-    const customer = await Customer.get(id);
-    return `${customer.firstName} ${customer.lastName}`
+    const result = await db.query(`SELECT id FROM customers WHERE last_name=$1 AND first_name=$2`, [lastName, firstName]);
+
+    return await Customer.get(result.rows[0].id);
   }
 
   /** get all reservations for this customer. */
@@ -85,6 +89,8 @@ class Customer {
       );
     }
   }
+
+
 
   fullName() {
     return `${this.firstName} ${this.lastName}`;

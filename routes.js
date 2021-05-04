@@ -47,12 +47,22 @@ router.post("/add/", async function (req, res, next) {
   }
 });
 
+router.get('/search/', async function (req, res, next) {
+  try {
+    let name = req.query.search;
+    let names = name.toLowerCase().split(' ');
+    const customer = await Customer.search(names);
+    res.redirect(`/${customer.id}/`);
+  } catch (e) {
+    return next(e);
+  }
+})
+
 /** Show a customer, given their ID. */
 
 router.get("/:id/", async function (req, res, next) {
   try {
     const customer = await Customer.get(req.params.id);
-    const fullName = await Customer.fullName(req.params.id);
     const reservations = await customer.getReservations();
 
     return res.render("customer_detail.html", { customer, reservations });
